@@ -2,21 +2,21 @@ console.log("Start");
 
 const question_bank = [
     {
-        question: "Question 1",
+        question: "1. Which one of the following river flows between Vindhyan and Satpura ranges?",
         options: [
-            { text: "Answer A1", value: true },
-            { text: "Answer B1", value: false },
-            { text: "Answer C1", value: false },
-            { text: "Answer D1", value: false },
+            { text: "Narmada", value: true },
+            { text: "Mahanadi", value: false },
+            { text: "Son", value: false },
+            { text: "Netravati", value: false },
         ]
     },
     {
-        question: "Question 2",
+        question: "The Central Rice Research Station is situated in?",
         options: [
-            { text: "Answer A2", value: false },
-            { text: "Answer B2", value: true },
-            { text: "Answer C2", value: false },
-            { text: "Answer D2", value: false },
+            { text: "Chennai", value: false },
+            { text: "Cuttack", value: true },
+            { text: "Bangalore", value: false },
+            { text: "Quilon", value: false },
         ]
     },
     {
@@ -99,7 +99,65 @@ const startQuizButton = document.getElementById("start");
 const nextButton = document.getElementsByClassName("next")[0];
 let score = 0;
 let currentQuestionIndex = 0;
+let myTimer;
 
+function startTimer() {
+    const currentTime = Date.now();
+    // const endTime = 600000 + currentTime;
+    const endTime = 10000 + currentTime;
+    myTimer = setInterval(countDownTimer, 1000);
+    function countDownTimer() {
+        const currentTime = Date.now();
+        const remainTime = endTime - currentTime;
+        const min = Math.floor(remainTime / 60000);
+        const sec = Math.floor((remainTime - (min * 60000)) / 1000);
+        console.log(`${min}:${sec}`);
+        if (min == 0 && sec == 0) {
+            clearInterval(myTimer);
+            nextQuestion();
+            timer.innerHTML = `Time is over`;
+            optn_container.classList.add("disabled");
+
+            // alert(`Your time has been up!`);
+        } else {
+            timer.innerHTML = `${min}:${sec}`;
+        }
+    }
+}
+function nextQuestion() {
+    optn_container.classList.remove("disabled")
+    clearInterval(myTimer);
+    console.log("Next Button Clicked")
+    startTimer();
+    if (currentQuestionIndex < question_bank.length) {
+        question.innerText = `${question_bank[currentQuestionIndex].question} and Your score is ${score} & current question index is ${currentQuestionIndex}`;
+        option1.innerText = question_bank[currentQuestionIndex].options[0].text;
+        option2.innerText = question_bank[currentQuestionIndex].options[1].text;
+        option3.innerText = question_bank[currentQuestionIndex].options[2].text;
+        option4.innerText = question_bank[currentQuestionIndex].options[3].text;
+        optionA.classList.remove("bgred");
+        optionA.classList.remove("bggreen");
+        optionB.classList.remove("bgred");
+        optionB.classList.remove("bggreen");
+        optionC.classList.remove("bgred");
+        optionC.classList.remove("bggreen");
+        optionD.classList.remove("bgred");
+        optionD.classList.remove("bggreen");
+        optionA.classList.remove("disabled");
+        optionB.classList.remove("disabled");
+        optionC.classList.remove("disabled");
+        optionD.classList.remove("disabled");
+        currentQuestionIndex++;
+
+    } else {
+        optn_container.classList.add("hidden");
+        question.innerText = `QUIZ ENDED | Your score is ${score}`;
+        clearInterval(myTimer);
+        timer.innerText = ""
+        startQuizButton.classList.remove("hidden");
+        nextButton.classList.add("hidden")
+    }
+}
 function startQuiz() {
     currentQuestionIndex = 0;
     optn_container.classList.remove("hidden");
@@ -108,24 +166,8 @@ function startQuiz() {
     nextButton.classList.remove("hidden");
     nextQuestion();
     console.log("Start Button Clicked")
-    const currentTime = Date.now();
-    // const endTime = 600000 + currentTime;
-    const endTime = 10000 + currentTime;
-    function countDownTimer() {
-        const currentTime = Date.now();
-        const remainTime = endTime - currentTime;
-        const min = Math.floor(remainTime / 60000);
-        const sec = Math.floor((remainTime - (min * 60000)) / 1000);
-        console.log(`${min}:${sec}`);
-        if (min == 0 && sec == 0 || min < 0) {
-            timer.innerHTML = `Time is over`;
-            // alert(`Your time has been up!`);
-        } else {
-            timer.innerHTML = `${min}:${sec}`;
-        }
-    }
-    setInterval(countDownTimer, 1000);
 }
+
 function AnsCheck0() {
     console.log("Option 1 clicked");
     if (question_bank[currentQuestionIndex].options[0].value == true) {
@@ -235,35 +277,6 @@ function AnsCheck3() {
     }
 }
 
-function nextQuestion() {
-    console.log("Next Button Clicked")
-    if (currentQuestionIndex < question_bank.length) {
-        question.innerText = `${question_bank[currentQuestionIndex].question} and Your score is ${score} & current question index is ${currentQuestionIndex}`;
-        option1.innerText = question_bank[currentQuestionIndex].options[0].text;
-        option2.innerText = question_bank[currentQuestionIndex].options[1].text;
-        option3.innerText = question_bank[currentQuestionIndex].options[2].text;
-        option4.innerText = question_bank[currentQuestionIndex].options[3].text;
-        optionA.classList.remove("bgred");
-        optionA.classList.remove("bggreen");
-        optionB.classList.remove("bgred");
-        optionB.classList.remove("bggreen");
-        optionC.classList.remove("bgred");
-        optionC.classList.remove("bggreen");
-        optionD.classList.remove("bgred");
-        optionD.classList.remove("bggreen");
-        optionA.classList.remove("disabled");
-        optionB.classList.remove("disabled");
-        optionC.classList.remove("disabled");
-        optionD.classList.remove("disabled");
-        currentQuestionIndex++;
-
-    } else {
-        optn_container.classList.add("hidden");
-        question.innerText = `QUIZ ENDED | Your score is ${score}`;
-        startQuizButton.classList.remove("hidden");
-        nextButton.classList.add("hidden")
-    }
-}
 
 startQuizButton.addEventListener("click", startQuiz);
 nextButton.addEventListener("click", nextQuestion);
